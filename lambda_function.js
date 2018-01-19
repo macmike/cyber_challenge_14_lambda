@@ -1,22 +1,4 @@
 exports.handler = (event, context, callback) => {
-  solveTimeBasedCodeChallenge(event, context, callback);
-};
-
-//the various urls and things we need
-//these can't got at the very top because lambda requires the export line at the top
-const url1 = "https://assess.joincyberdiscovery.com/challenge-files/clock-pt1?verify=NsmB%2BXNLbNs5ek4zWN6P1w%3D%3D";
-const url2 = "https://assess.joincyberdiscovery.com/challenge-files/clock-pt2?verify=NsmB%2BXNLbNs5ek4zWN6P1w%3D%3D";
-const url3 = "https://assess.joincyberdiscovery.com/challenge-files/clock-pt3?verify=NsmB%2BXNLbNs5ek4zWN6P1w%3D%3D";
-const url4 = "https://assess.joincyberdiscovery.com/challenge-files/clock-pt4?verify=NsmB%2BXNLbNs5ek4zWN6P1w%3D%3D";
-const url5 = "https://assess.joincyberdiscovery.com/challenge-files/clock-pt5?verify=NsmB%2BXNLbNs5ek4zWN6P1w%3D%3D";
-const resultUrl = "https://assess.joincyberdiscovery.com/challenge-files/get-flag?verify=NsmB%2BXNLbNs5ek4zWN6P1w%3D%3D&string=";
-var codes = [];
-
-
-
-
-//kick things off
-function solveTimeBasedCodeChallenge(event, context, callback){
     
     //these get called asynchronously so we've got to wait later until they're done
     getCode(callback,url1,1);    
@@ -25,18 +7,22 @@ function solveTimeBasedCodeChallenge(event, context, callback){
     getCode(callback,url4,4);    
     getCode(callback,url5,5);    
     
-    //this bit waits for 300ms before checking for results
     setTimeout(function(){
         checkForResults(event, context, callback);
-    },300);
-}
+    },500);
+    
+};
 
+const url1 = "https://assess.joincyberdiscovery.com/challenge-files/clock-pt1?verify=NsmB%2BXNLbNs5ek4zWN6P1w%3D%3D";
+const url2 = "https://assess.joincyberdiscovery.com/challenge-files/clock-pt2?verify=NsmB%2BXNLbNs5ek4zWN6P1w%3D%3D";
+const url3 = "https://assess.joincyberdiscovery.com/challenge-files/clock-pt3?verify=NsmB%2BXNLbNs5ek4zWN6P1w%3D%3D";
+const url4 = "https://assess.joincyberdiscovery.com/challenge-files/clock-pt4?verify=NsmB%2BXNLbNs5ek4zWN6P1w%3D%3D";
+const url5 = "https://assess.joincyberdiscovery.com/challenge-files/clock-pt5?verify=NsmB%2BXNLbNs5ek4zWN6P1w%3D%3D";
+const resultUrl = "https://assess.joincyberdiscovery.com/challenge-files/get-flag?verify=NsmB%2BXNLbNs5ek4zWN6P1w%3D%3D&string=";
+var codes = [];
 
-
-
-// this function gets a string from one of the code urls and shoves it in the array
 function getCode(callback, url, codenum) {
-    //console.log(`GetCode(${codenum})`);
+    console.log(`GetCode(${codenum})`);
     getWebRequest(url, function webResonseCallback(err, data) {
         if (err) {
             console.log('error getting code:' + err);
@@ -49,10 +35,6 @@ function getCode(callback, url, codenum) {
     });
 }
 
-
-
-//this function waits to until the array is full of codes, then it combines them
-//into a single string, before looking for the final answer
 function checkForResults(event, context, callback){
         
     if (allCodesCollected(codes)){
@@ -64,13 +46,11 @@ function checkForResults(event, context, callback){
     } else {
         //if we don't have all of the results yet wait a bit and check again
         //console.log('Not all codes collected yet, waiting another 100ms');
-        setTimeout(checkForResults(event, context, callback),300); 
+        setTimeout(checkForResults(event, context, callback),2000); 
     }
 }
 
 
-//this function looks for the final answer using the combines code  
-//and exits the lambda function
 function getFinalAnswer(event, context, callback, combinedCode){
     //console.log(`GetCode(${codenum})`);
     getWebRequest(resultUrl + combinedCode, function webResonseCallback(err, data) {
@@ -81,27 +61,35 @@ function getFinalAnswer(event, context, callback, combinedCode){
             //something like this
             var finalAnswer = data;
             console.log(`finalAnswer = ${data}`);
-            callback(null,finalAnswer);
+            //build a response object and return
+            var resultObj = {}
+            resultObj.codes = codes;
+            resultObj.combinedCode = combinedCode;
+            resultObj.finalAnswer = finalAnswer;
+            callback(null,resultObj);
         }
     });  
 }
 
 
-///simple function to check the array has 5 elements and they're not all empty strings 
+///mucking about to see if the array is correct
+
 function allCodesCollected(codesArray){
  //console.log(`  array size: ${codesArray.length} values: ${codesArray.join()}`);
-     return (codesArray.length === 5) &&
-       (codesArray[0] != '') &&
-       (codesArray[1] != '') &&
-       (codesArray[2] != '') &&
-       (codesArray[3] != '') &&
-       (codesArray[4] != '');
+ return (codesArray.length === 5) &&
+   (codesArray[0] != '') &&
+   (codesArray[1] != '') &&
+   (codesArray[2] != '') &&
+   (codesArray[3] != '') &&
+   (codesArray[4] != '');
 }
 
 
 
-//calling a https webservice
+//calling a webservice
+
 var http = require('https');
+ 
 function getWebRequest(url,doWebRequestCallBack) {
     //console.log("getWebRequest("+url+")");
     http.get(url, function (res) {
