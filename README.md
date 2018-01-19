@@ -3,7 +3,7 @@ A lambda solution for a time based authenticator
 
 This can be simply copied and pasted into Cloud9 or an AWS Lambda function
 
-[Full code](index.js)
+[Try it out here!](https://macmike.github.io/cyber_challenge_14_lambda/)
 
 # Output
 ![CyberCodes Output](https://github.com/macmike/cyber_challenge_14_lambda/blob/master/cyber_codes_output.png)
