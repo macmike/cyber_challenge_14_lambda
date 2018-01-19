@@ -39,7 +39,8 @@
         
         const APIurl = "https://8t5ceotyij.execute-api.eu-west-1.amazonaws.com/CyberCodesAPI_Live";
         
-        $(document).ready(function(){
+        $(document).ready(function(){\
+            UpdateCodes();
             setInterval(function(){
                 UpdateCodes();
             },500);
