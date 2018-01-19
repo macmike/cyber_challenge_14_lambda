@@ -35,30 +35,31 @@ function checkForResults(event, context, callback){
     if (allCodesCollected(codes)){
         //got the code, let's call out for the final answer
         var combinedCode = codes.join('');
-        console.log(`Combined code: ${combinedCode}`);
         getFinalAnswer(event,context, callback, combinedCode);
          
     } else {
         //if we don't have all of the results yet wait a bit and check again
-        //console.log('Not all codes collected yet, waiting another 100ms');
         setTimeout(checkForResults(event, context, callback),300); 
     }
 }
 
 
-//this function looks for the final answer using the combines code  
-//and exits the lambda function
+//this function looks for the final answer using the combined code  
+//build a JSON result object and exits the lambda function
 function getFinalAnswer(event, context, callback, combinedCode){
-    //console.log(`GetCode(${codenum})`);
     getWebRequest(resultUrl + combinedCode, function webResonseCallback(err, data) {
         if (err) {
-            console.log('error getting final answer:' + err);
             callback(null, "Sorry I couldn't connect to the server: " + err);
         } else {
             //something like this
             var finalAnswer = data;
-            console.log(`finalAnswer = ${data}`);
-            callback(null,finalAnswer);
+            
+            //build a response object and return
+            var resultObj = {}
+            resultObj.codes = codes;
+            resultObj.combinedCode = combinedCode;
+            resultObj.finalAnswer = finalAnswer;
+            callback(null,resultObj);
         }
     });  
 }
