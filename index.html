@@ -2,13 +2,13 @@
 <html lang="en">
 <head>
 
-    <!-- a few dependencies -->
+    <!-- using jquery to make things simpler -->
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1">
 
-    <title>Get Cyber Challenge 14 answer</title>
+    <title>Get Cyber Challenge 14 Answer</title>
     
     <style>
         body{
@@ -39,8 +39,10 @@
         
         const APIurl = "https://8t5ceotyij.execute-api.eu-west-1.amazonaws.com/CyberCodesAPI_Live";
         
-        $(document).ready(function(){\
+        $(document).ready(function(){
+            //get the data
             UpdateCodes();
+            //update it every half second
             setInterval(function(){
                 UpdateCodes();
             },500);
