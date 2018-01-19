@@ -6,7 +6,7 @@ This can be simply copied and pasted into Cloud9 or an AWS Lambda function
 [Full code](index.js)
 
 # Output
-![CyberCodes Output](cyber_codes.png "CyberCodes output")
+![CyberCodes Output](https://github.com/macmike/cyber_challenge_14_lambda/blob/master/cyber_codes_output.png)
 
 
 # Overview
