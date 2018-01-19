@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <!-- a few dependencies -->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+
+    <title>Get Cyber Challenge 14 answer</title>
+    
+    <style>
+        body{
+            background-color: #343434;
+            color: #e6e6e6;
+        }
+                
+        .resultData {
+            font-family: monospace;
+            font-weight: 500;
+            color: #a8cea8;
+        }
+    </style>
+
+</head>
+<body>
+    <h1>Challenge 14</h1>
+        <p>Code 1: <span id="code1" class="resultData"></span></p>
+        <p>Code 2: <span id="code2" class="resultData"></span></p>
+        <p>Code 3: <span id="code3" class="resultData"></span></p>
+        <p>Code 4: <span id="code4" class="resultData"></span></p>
+        <p>Code 5: <span id="code5" class="resultData"></span></p>
+        <p>Combined Code: <span id="code_combined" class="resultData"></span></p>
+        <p> Answer: <span id="finalResult" class="resultData"></span></p>
+    
+    
+    <script type="text/javascript">
+        
+        const APIurl = "https://8t5ceotyij.execute-api.eu-west-1.amazonaws.com/CyberCodesAPI_Live";
+        
+        $(document).ready(function(){
+            setInterval(function(){
+                UpdateCodes();
+            },500);
+        });
+
+        function UpdateCodes(){
+            $.get(APIurl, function(data) {
+                $("#code1").html(data.codes[0]);
+                $("#code2").html(data.codes[1]);
+                $("#code3").html(data.codes[2]);
+                $("#code4").html(data.codes[3]);
+                $("#code5").html(data.codes[4]);
+                $("#code_combined").html(data.combinedCode);
+                $("#finalResult").html(data.finalAnswer);
+                
+            });
+        }
+        
+    </script>
+
+</body>
+</html>
+
